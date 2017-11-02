@@ -16,7 +16,7 @@ class AI:
 
     def get_best_selector(self):
         for html in self.htmls:
-            soup = BeautifulSoup(html.decode('utf-8'), "html.parser")
+            soup = BeautifulSoup(html.decode('utf-8'), 'html.parser')
             self.soups.append(soup)
 
         classes, ids, tags = find_class_id_attribute(self.soups[0])
@@ -39,10 +39,40 @@ class AI:
                         print "HERE"
                         return cur
                     else:
-                        heappush(priority_queue, (self.f(cur), cur))
+                        xx = self.f(cur)
+                        if xx < 1000000:
+                            heappush(priority_queue, (xx, cur))
+                for cls in classes:
+                    if cls is not None and len(cls) > 0:
+                        cur = front[1] + act + '.' + cls
+                        print cur
+                        if self.is_goal(cur):
+                            print "HERE"
+                            return cur
+                        else:
+                            xx = self.f(cur)
+                            if xx < 1000000:
+                                heappush(priority_queue, (xx, cur))
 
     @staticmethod
     def heuristic(selected, content):
+       # print selected
+      #  print content
+        content = content.replace('\n', '')
+        found = False
+        ret = 0
+        for tag in selected:
+            if str(tag).replace('\n', '').find(content) != -1:
+                found = True
+                ret += len(str(tag).replace('\n', '')) - len(content)
+            else:
+                ret += len(str(tag).replace('\n', ''))
+        if not found:
+            return 1000000000
+        return ret
+
+    @staticmethod
+    def heuristic_goal(selected, content):
        # print selected
       #  print content
         content = content.replace('\n', '')
@@ -66,14 +96,16 @@ class AI:
     def f(self, selector):
         tot = 0
         for soup, content in zip(self.soups, self.contents):
+          #  print content
             tot += self.heuristic(soup.select(selector), content)
+           # print tot
          #   tot += self.cost(selector)
         return tot / len(self.soups)
 
     def is_goal(self, selector):
 
         for soup, content in zip(self.soups, self.contents):
-            if self.heuristic(soup.select(selector), content) > 1:
+            if self.heuristic_goal(soup.select(selector), content) > 1:
                 return False
         return True
 
