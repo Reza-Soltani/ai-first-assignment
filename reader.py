@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream:utils.py
-def read_script():
-    input_file = open('isna_topic.test', 'r')
-=======
 def read_test():
     input_file = open('/Users/reza/PycharmProjects/css-selector/isna_topic.test', mode='r')
->>>>>>> Stashed changes:reader.py
     is_url = 1
     urls = []
     contents = []
