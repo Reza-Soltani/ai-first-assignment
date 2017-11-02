@@ -1,5 +1,5 @@
 def read_script():
-    input_file = open('/Users/reza/PycharmProjects/untitled1/isna_topic.test', 'r')
+    input_file = open('isna_topic.test', 'r')
     is_url = 1
     urls = []
     contents = []
