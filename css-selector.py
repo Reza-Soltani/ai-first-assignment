@@ -1,11 +1,12 @@
-from utils import read_script
-from bs4 import BeautifulSoup
 import urllib
-from parse_html import find_class_id_attribute
 
-urls, contents = read_script()
+from aisearcher import get_best_selector
+from reader import read_test
 
-r = urllib.urlopen(urls[0]).read()
-soup = BeautifulSoup(r, "html.parser")
+urls, contents = read_test()
+htmls = []
 
-classes, ids = find_class_id_attribute(soup)
+for i in range(0, len(urls)):
+    htmls.append(urllib.urlopen(urls[i]).read())
+
+get_best_selector(htmls, contents)
