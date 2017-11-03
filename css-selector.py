@@ -2,7 +2,6 @@ import urllib
 
 from aisearcher import AI
 from reader import read_test
-from dfsSearch import AI2
 
 urls, contents = read_test()
 htmls = []
@@ -11,4 +10,6 @@ for i in range(0, len(urls)):
     htmls.append(urllib.urlopen(urls[i]).read())
 
 ai_searcher = AI(htmls, contents)
-ai_searcher.get_best_selector()
+find_best = ai_searcher.get_best_selector()
+print 'Best founded selector is: ' + find_best[0]
+print 'With cost: ' + str(find_best[1])

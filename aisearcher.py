@@ -20,44 +20,50 @@ class AI:
             self.soups.append(soup)
 
         classes, ids, tags = find_class_id_attribute(self.soups[0])
-
-        # for soup, content in zip(self.soups, self.contents):
-        #     print self.heuristic(str(soup.select('.item > .full-news > .full-news-text > header > div > h1')[0]), content)
-
         actions = [' > ', ' ']
         priority_queue = []
         heappush(priority_queue, (self.f('html'), 'html'))
+        last_found = 1000000000
+        best_found = 'html'
         while len(priority_queue) > 0:
             front = heappop(priority_queue)
-            print front[0]
-            print front[1]
+            if front[0] > last_found:
+                break
+            print 'Expanding ' + front[1]
+            print 'Cost is: ' + str(front[0])
+            last_found = front[0]
+            best_found = front[1]
             for act in actions:
                 for tag in tags:
                     cur = front[1] + act + tag
-                    print cur
                     if self.is_goal(cur):
-                        print "HERE"
-                        return cur
+                        return cur, self.f(cur)
                     else:
                         xx = self.f(cur)
-                        if xx < 1000000:
+                        if xx <= last_found:
                             heappush(priority_queue, (xx, cur))
                 for cls in classes:
                     if cls is not None and len(cls) > 0:
                         cur = front[1] + act + '.' + cls
-                        print cur
                         if self.is_goal(cur):
-                            print "HERE"
-                            return cur
+                            return cur, self.f(cur)
                         else:
                             xx = self.f(cur)
-                            if xx < 1000000:
+                            if xx <= last_found:
                                 heappush(priority_queue, (xx, cur))
+            if front[1][-1] != ')':
+                for i in range(1, 5):
+                    cur = front[1] + ":nth-of-type(" + str(i) + ")"
+                    if self.is_goal(cur):
+                        return cur, self.f(cur)
+                    else:
+                        xx = self.f(cur)
+                        if xx <= last_found:
+                            heappush(priority_queue, (xx, cur))
+        return best_found, last_found
 
     @staticmethod
     def heuristic(selected, content):
-       # print selected
-      #  print content
         content = content.replace('\n', '')
         found = False
         ret = 0
@@ -73,8 +79,6 @@ class AI:
 
     @staticmethod
     def heuristic_goal(selected, content):
-       # print selected
-      #  print content
         content = content.replace('\n', '')
         found = False
         ret = 0
@@ -96,10 +100,7 @@ class AI:
     def f(self, selector):
         tot = 0
         for soup, content in zip(self.soups, self.contents):
-          #  print content
             tot += self.heuristic(soup.select(selector), content)
-           # print tot
-         #   tot += self.cost(selector)
         return tot / len(self.soups)
 
     def is_goal(self, selector):
