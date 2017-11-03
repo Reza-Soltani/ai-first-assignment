@@ -38,7 +38,7 @@ class AI2:
         heappush(priority_queue, (self.f('html'), 'html'))
         while len(priority_queue) > 0 and depth < 20:
             front = heappop(priority_queue)
-            # print "while", front[0], front[1]
+            print "while", front[0], front[1]
             self.match = front[1]
             push = False
             for act in actions:
