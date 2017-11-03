@@ -2,6 +2,7 @@ import urllib
 
 from aisearcher import AI
 from reader import read_test
+from dfsSearch import AI2
 
 urls, contents = read_test()
 htmls = []

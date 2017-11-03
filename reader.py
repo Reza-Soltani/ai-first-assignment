@@ -1,5 +1,5 @@
 def read_test():
-    input_file = open('/Users/reza/PycharmProjects/css-selector/mashregh_mainimage.test', mode='r')
+    input_file = open('isna_topic.test', mode='r')
     is_url = 1
     urls = []
     contents = []
